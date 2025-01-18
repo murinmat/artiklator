@@ -1,8 +1,10 @@
-import requests
 import asyncio
 from typing import List
+from german_nouns.lookup import Nouns
 from dataclasses import dataclass
 from googletrans import Translator
+
+NOUN_DICT = None
 
 
 @dataclass(kw_only=True)
@@ -47,25 +49,30 @@ def articlerize(
     german_noun: str | List[str],
     include_google_translation: str | None = None
 ) -> ArtiklatorResponse | TranslatedArtiklatorResponse:
+    global NOUN_DICT
+    if NOUN_DICT is None:
+        NOUN_DICT = Nouns()
+
     capitalized = german_noun.capitalize()
     translation = None
-    for article in ['der', 'die', 'das']:
-        response = requests.get(
-            f'https://der-artikel.de/{article}/{capitalized}.html'
-        )
-        if response.status_code == 200:
-            if include_google_translation is not None:
-                translation = __translate(
-                    german_noun, include_google_translation
-                )
-                return TranslatedArtiklatorResponse(
-                    article=article,
-                    german_noun=german_noun,
-                    translation=translation
-                )
-            else:
-                return ArtiklatorResponse(
-                    article=article, german_noun=german_noun
-                )
 
-    raise ArticleNotFoundException(f'Did not find article for "{german_noun}".')
+    try:
+        resolved = {'m': 'der', 'f': 'die', 'n': 'das'}
+        output = NOUN_DICT[capitalized]
+        if len(output) == 0:
+            raise ArticleNotFoundException(
+                f'Did not find article for "{german_noun}".'
+            )
+        article = resolved[output[0]['genus']]
+    except KeyError:
+        raise ArticleNotFoundException(
+            f'Did not find article for "{german_noun}".'
+        )
+
+    if include_google_translation is not None:
+        translation = __translate(german_noun, include_google_translation)
+        return TranslatedArtiklatorResponse(
+            article=article, german_noun=german_noun, translation=translation
+        )
+    else:
+        return ArtiklatorResponse(article=article, german_noun=german_noun)
