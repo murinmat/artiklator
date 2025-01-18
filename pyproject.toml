@@ -24,7 +24,8 @@ dynamic = ["version"]
 requires-python = ">=3.11"
 dependencies = [
     "requests",
-    "googletrans"
+    "googletrans",
+    "german-nouns"
 ]
 authors = [
     { name = "Matej Murín", email = "matejmurin01@gmail.com" },
