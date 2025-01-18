@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.setuptools]
+packages = ["artiklator"]
+
+[tool.hatch.version]
+path = "artiklator/__init__.py"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build]
+include = [
+    "artiklator/*",
+]
+
+[project]
+name = "artiklator"
+description = "German article determination and other utils."
+readme = "README.md"
+dynamic = ["version"]
+requires-python = ">=3.11"
+dependencies = [
+    "requests",
+    "googletrans"
+]
+authors = [
+    { name = "Matej Murín", email = "matejmurin01@gmail.com" },
+]
+keywords = ["artiklator", "german", "language"]
+
+[project.optional-dependencies]
+
+[project.urls]
+Homepage = "https://github.com/murinmat/artiklator"
+Issues = "https://github.com/murinmat/artiklator/issues"
