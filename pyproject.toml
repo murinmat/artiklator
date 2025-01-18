@@ -32,6 +32,7 @@ authors = [
 keywords = ["artiklator", "german", "language"]
 
 [project.optional-dependencies]
+dev = ["pytest"]
 
 [project.urls]
 Homepage = "https://github.com/murinmat/artiklator"
