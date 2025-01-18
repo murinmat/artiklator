@@ -1,0 +1,30 @@
+name: YAPF Formatting Check
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  yapf-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install YAPF
+      run: pip install yapf
+
+    - name: Fail if YAPF diff is non-empty
+      run: |
+        yapf --diff --recursive --style=.style.yapf . | tee yapf-diff.txt
+        test ! -s yapf-diff.txt
