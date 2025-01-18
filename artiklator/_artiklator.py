@@ -65,8 +65,7 @@ def articlerize(
                 )
             else:
                 return ArtiklatorResponse(
-                    article=article,
-                    german_noun=german_noun
+                    article=article, german_noun=german_noun
                 )
 
     raise ArticleNotFoundException(f'Did not find article for "{german_noun}".')
